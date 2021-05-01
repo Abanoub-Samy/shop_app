@@ -34,10 +34,16 @@ class Cart with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
+
   double get totalAmount {
-    var total=0.0;
+    var total = 0.0;
     _items.forEach((key, value) {
-      total+=value.price*value.quantity;
+      total += value.price * value.quantity;
     });
     return total;
   }
