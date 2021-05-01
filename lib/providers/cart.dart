@@ -47,6 +47,10 @@ class Cart with ChangeNotifier {
     });
     return total;
   }
+  void clear(){
+    _items = {};
+    notifyListeners();
+  }
 }
 
 class CartItem {
