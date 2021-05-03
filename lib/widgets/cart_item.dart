@@ -22,7 +22,7 @@ class CartItem extends StatelessWidget {
     return Dismissible(
       key: ValueKey(id),
       background: Container(
-        padding: const EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.only(right: 10),
         margin: const EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 4,
