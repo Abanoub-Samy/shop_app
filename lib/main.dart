@@ -39,36 +39,17 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             fontFamily: 'Lato'),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+        home: SafeArea(
+          child: ProductsOverviewScreen(),
+        ),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routName: (ctx) => CartScreen(),
-          OrderScreen.routeName : (ctx) => OrderScreen(),
-          UserProductScreen.routeName : (ctx) => UserProductScreen(),
-          EditProductScreen.routeName : (ctx) => EditProductScreen(),
+          OrderScreen.routeName: (ctx) => OrderScreen(),
+          UserProductScreen.routeName: (ctx) => UserProductScreen(),
+          EditProductScreen.routeName: (ctx) => EditProductScreen(),
         },
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: SafeArea(child: ProductsOverviewScreen()),
     );
   }
 }

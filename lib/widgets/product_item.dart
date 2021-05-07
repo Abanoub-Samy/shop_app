@@ -5,12 +5,6 @@ import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
-  // final String id;
-  // final String title;
-  // final String imageUrl;
-  //
-  // ProductItem(this.id, this.title, this.imageUrl);
-
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
@@ -61,9 +55,11 @@ class ProductItem extends StatelessWidget {
                 duration: Duration(
                   seconds: 3,
                 ),
-                action: SnackBarAction(label: 'UNDO',onPressed: (){
-                  cart.removeSingleItem(product.id);
-                },
+                action: SnackBarAction(
+                  label: 'UNDO',
+                  onPressed: () {
+                    cart.removeSingleItem(product.id);
+                  },
                   textColor: Theme.of(context).primaryColor,
                 ),
               ));
