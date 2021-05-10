@@ -5,9 +5,11 @@ import 'package:shop_app/providers/order.dart';
 import 'package:shop_app/providers/products.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
+import 'package:shop_app/screens/login_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
+import 'package:shop_app/screens/signUp_screen.dart';
 import 'package:shop_app/screens/user_product_screen.dart';
 
 void main() {
@@ -40,7 +42,8 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
             fontFamily: 'Lato'),
         home: SafeArea(
-          child: ProductsOverviewScreen(),
+          // child: ProductsOverviewScreen(),
+          child: LoginScreen(),
         ),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
@@ -48,6 +51,9 @@ class MyApp extends StatelessWidget {
           OrderScreen.routeName: (ctx) => OrderScreen(),
           UserProductScreen.routeName: (ctx) => UserProductScreen(),
           EditProductScreen.routeName: (ctx) => EditProductScreen(),
+          SignUpScreen.routeName: (ctx) => SignUpScreen(),
+          LoginScreen.routeName: (ctx) => LoginScreen(),
+          ProductsOverviewScreen.routeName: (ctx) => ProductsOverviewScreen(),
         },
       ),
     );
