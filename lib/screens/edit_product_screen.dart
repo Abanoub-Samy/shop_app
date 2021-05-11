@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/dataBase/sqlDatabase.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products.dart';
 
@@ -56,7 +57,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _saveForm() {
+  void _saveForm(var sqlDatabase) {
     final isValid = _form.currentState.validate();
     if (!isValid) {
       return;
@@ -68,6 +69,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
         listen: false,
       ).updateProduct(_editProduct.id, _editProduct);
     } else {
+      sqlDatabase.insertProduct(
+        id: _editProduct.id,
+        title: _editProduct.title,
+        description: _editProduct.description,
+        price: _editProduct.price,
+        imageUrl: _editProduct.imageUrl,
+      );
       Provider.of<Products>(
         context,
         listen: false,
@@ -80,7 +88,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
-
     super.initState();
   }
 
@@ -108,12 +115,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final sqlDatabase = Provider.of<SqlDataBase>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Product'),
         actions: [
           IconButton(
-            onPressed: _saveForm,
+            onPressed: () {
+              _saveForm(sqlDatabase);
+            },
             icon: Icon(Icons.add),
           ),
         ],
@@ -241,7 +251,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         controller: _imageUrlController,
                         focusNode: _imageUrlFocusNode,
                         onFieldSubmitted: (_) {
-                          _saveForm();
+                          _saveForm(sqlDatabase);
                         },
                         onSaved: (value) {
                           _editProduct = Product(
