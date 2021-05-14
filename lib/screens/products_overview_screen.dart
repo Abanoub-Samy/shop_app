@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shop_app/providers/cart.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/dataBase/AppCubit.dart';
+import 'package:shop_app/dataBase/appStates.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
 import 'package:shop_app/widgets/badge.dart';
@@ -27,6 +28,19 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       appBar: AppBar(
         title: const Text('My Shop'),
         actions: [
+          BlocConsumer<AppCubit, AppStates>(
+            listener: (ctx, state) {},
+            builder: (ctx, state) {
+              return Badge(
+                  child: IconButton(
+                    icon: Icon(Icons.shopping_cart),
+                    onPressed: () {
+                      Navigator.pushNamed(context, CartScreen.routName);
+                    },
+                  ),
+                  value: AppCubit.get(context).itemCount.toString());
+            },
+          ),
           PopupMenuButton(
             icon: Icon(Icons.more_vert_outlined),
             itemBuilder: (_) => [
@@ -49,16 +63,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               });
             },
           ),
-          Consumer<Cart>(
-            builder: (_, cartData, ch) =>
-                Badge(child: ch, value: cartData.itemCount.toString()),
-            child: IconButton(
-              icon: Icon(Icons.shopping_cart),
-              onPressed: () {
-                Navigator.pushNamed(context, CartScreen.routName);
-              },
-            ),
-          )
         ],
       ),
       drawer: AppDrawer(),

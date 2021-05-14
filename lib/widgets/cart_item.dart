@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/dataBase/AppCubit.dart';
 
 class CartItem extends StatelessWidget {
   final String id;
@@ -36,7 +35,7 @@ class CartItem extends StatelessWidget {
       ),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        Provider.of<Cart>(context, listen: false).removeItem(productId);
+        AppCubit.get(context).removeItem(productId);
       },
       confirmDismiss: (direction) {
         return showDialog(

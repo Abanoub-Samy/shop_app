@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shop_app/providers/cart.dart' show Cart;
-import 'package:shop_app/providers/order.dart';
-import 'package:shop_app/widgets/cart_item.dart';
+import 'package:shop_app/dataBase/AppCubit.dart';
+import 'package:shop_app/widgets/cart_item.dart' as Cart;
 
 class CartScreen extends StatelessWidget {
   static const routName = '/cart-screen';
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<Cart>(context);
+    final cart = AppCubit.get(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Cart'),
@@ -45,9 +43,9 @@ class CartScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Provider.of<Order>(context, listen: false).addOrder(
-                          cart.items.values.toList(), cart.totalAmount);
-                      cart.clear();
+                      // Provider.of<Order>(context, listen: false).addOrder(
+                      //     cart.items.values.toList(), cart.totalAmount);
+                      // cart.clear();
                     },
                     style: ButtonStyle(),
                     child: Text(
@@ -66,7 +64,7 @@ class CartScreen extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemBuilder: (ctx, index) => CartItem(
+              itemBuilder: (ctx, index) => Cart.CartItem(
                   id: cart.items.values.toList()[index].id,
                   productId: cart.items.keys.toList()[index],
                   title: cart.items.values.toList()[index].title,

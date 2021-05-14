@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shop_app/dataBase/sqlDatabase.dart';
-import 'package:shop_app/providers/product.dart';
-import 'package:shop_app/providers/products.dart';
+import 'package:shop_app/dataBase/AppCubit.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -16,23 +13,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   final _descriptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
-  var _editProduct = Product(
-    id: null,
-    title: '',
-    description: '',
-    price: 0,
-    imageUrl: '',
-  );
 
-  var _isInit = true;
-  var _initValues = {
-    'title': '',
-    'description': '',
-    'price': '',
-    'imageUrl': '',
-  };
+  List<Map> productData = [];
+
+  // var _isInit = true;
+  // var _initValues = {
+  //   'title': '',
+  //   'description': '',
+  //   'price': '',
+  //   'imageUrl': '',
+  // };
+  // var _values = {
+  //   'title': '',
+  //   'description': '',
+  //   'price': 0,
+  //   'imageUrl': '',
+  // };
 
   @override
   void dispose() {
@@ -57,30 +58,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _saveForm(var sqlDatabase) {
+  void _saveForm() {
     final isValid = _form.currentState.validate();
     if (!isValid) {
       return;
     }
+    AppCubit.get(context).insertProduct(
+      id: DateTime.now().toString(),
+      title: _titleController.text,
+      description: _descriptionController.text,
+      price: double.parse(_priceController.text),
+      imageUrl: _imageUrlController.text,
+      isFavorite: 'false',
+    );
     _form.currentState.save();
-    if (_editProduct.id != null) {
-      Provider.of<Products>(
-        context,
-        listen: false,
-      ).updateProduct(_editProduct.id, _editProduct);
-    } else {
-      sqlDatabase.insertProduct(
-        id: _editProduct.id,
-        title: _editProduct.title,
-        description: _editProduct.description,
-        price: _editProduct.price,
-        imageUrl: _editProduct.imageUrl,
-      );
-      Provider.of<Products>(
-        context,
-        listen: false,
-      ).addProduct(_editProduct);
-    }
 
     Navigator.of(context).pop();
   }
@@ -91,38 +82,42 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      final productId = ModalRoute.of(context).settings.arguments as String;
-      if (productId != null) {
-        _editProduct = Provider.of<Products>(
-          context,
-          listen: false,
-        ).findById(productId);
-        _initValues = {
-          'title': _editProduct.title,
-          'description': _editProduct.description,
-          'price': _editProduct.price.toString(),
-          'imageUrl': '',
-        };
-        _imageUrlController.text = _editProduct.imageUrl;
-      }
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   reloadData();
+  //   super.didChangeDependencies();
+  // }
+
+  // void reloadData(BuildContext context) {
+  //   if (_isInit) {
+  //     final productId = ModalRoute.of(context).settings.arguments as String;
+  //     print(productId);
+  //     if (productId != null) {
+  //       AppCubit.get(context).getProductById(productId).then((value) {
+  //         productData = value;
+  //       });
+  //       print(productData);
+  //       // _initValues = {
+  //       //   'title': productData[0]['title'],
+  //       //   'description': productData[0]['description'],
+  //       //   'price': productData[0]['price'].toString(),
+  //       //   'imageUrl': '',
+  //       // };
+  //       // _imageUrlController.text = productData[0]['imageUrl'];
+  //     }
+  //   }
+  //   _isInit = false;
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final sqlDatabase = Provider.of<SqlDataBase>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Product'),
         actions: [
           IconButton(
             onPressed: () {
-              _saveForm(sqlDatabase);
+              _saveForm();
             },
             icon: Icon(Icons.add),
           ),
@@ -135,21 +130,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: [
               TextFormField(
-                initialValue: _initValues['title'],
+                // initialValue: _initValues['title'],
                 decoration: InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
-                onSaved: (value) {
-                  _editProduct = Product(
-                      title: value,
-                      price: _editProduct.price,
-                      id: _editProduct.id,
-                      imageUrl: _editProduct.imageUrl,
-                      description: _editProduct.description,
-                      isFavorite: _editProduct.isFavorite);
-                },
+                controller: _titleController,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please Enter Title.';
@@ -158,7 +145,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
-                initialValue: _initValues['price'],
+                // initialValue: _initValues['price'],
                 decoration: InputDecoration(labelText: 'Price'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
@@ -166,16 +153,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
-                onSaved: (value) {
-                  _editProduct = Product(
-                    title: _editProduct.title,
-                    price: double.parse(value),
-                    id: _editProduct.id,
-                    imageUrl: _editProduct.imageUrl,
-                    description: _editProduct.description,
-                    isFavorite: _editProduct.isFavorite,
-                  );
-                },
+                controller: _priceController,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please Enter Price.';
@@ -190,21 +168,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
-                initialValue: _initValues['description'],
+                // initialValue: _initValues['description'],
                 decoration: InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
-                onSaved: (value) {
-                  _editProduct = Product(
-                    title: _editProduct.title,
-                    price: _editProduct.price,
-                    id: _editProduct.id,
-                    imageUrl: _editProduct.imageUrl,
-                    description: value,
-                    isFavorite: _editProduct.isFavorite,
-                  );
-                },
+                controller: _descriptionController,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please Enter Description.';
@@ -250,18 +219,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         textInputAction: TextInputAction.done,
                         controller: _imageUrlController,
                         focusNode: _imageUrlFocusNode,
-                        onFieldSubmitted: (_) {
-                          _saveForm(sqlDatabase);
-                        },
-                        onSaved: (value) {
-                          _editProduct = Product(
-                              title: _editProduct.title,
-                              price: _editProduct.price,
-                              id: _editProduct.id,
-                              imageUrl: value,
-                              description: _editProduct.description,
-                              isFavorite: _editProduct.isFavorite);
-                        },
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please Enter An Image URL.';
