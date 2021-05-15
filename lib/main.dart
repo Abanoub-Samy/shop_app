@@ -7,6 +7,7 @@ import 'package:shop_app/dataBase/bloc_observer.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/screens/login_screen.dart';
+import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
 import 'package:shop_app/screens/signUp_screen.dart';
@@ -48,7 +49,7 @@ class _MyAppState extends State<MyApp> {
               routes: {
                 ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
                 CartScreen.routName: (ctx) => CartScreen(),
-                // OrderScreen.routeName: (ctx) => OrderScreen(),
+                OrderScreen.routeName: (ctx) => OrderScreen(),
                 UserProductScreen.routeName: (ctx) => UserProductScreen(),
                 EditProductScreen.routeName: (ctx) => EditProductScreen(),
                 SignUpScreen.routeName: (ctx) => SignUpScreen(),

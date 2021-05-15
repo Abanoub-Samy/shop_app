@@ -16,6 +16,8 @@ class DeleteDatabase extends AppStates {}
 
 class GetCarts extends AppStates {}
 
+class GetTotalAmount extends AppStates {}
+
 class InsertCart extends AppStates {}
 
 class UpdateCart extends AppStates {}
